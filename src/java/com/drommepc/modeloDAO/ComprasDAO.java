@@ -18,7 +18,7 @@ public class ComprasDAO {
     Conexion cn = new Conexion();
     PreparedStatement ps;
     ResultSet rs;
-    int r = 0;
+    int r ;
     
        public int IdCompra() {
         int idc = 0;
@@ -34,6 +34,7 @@ public class ComprasDAO {
         }
         return idc;
     }
+       
 
     public int guardarCompra(Compras co) {
         String sql = "insert into Compras(idCliente,idPago, FechaCompras,Monto,Estado)values(?,?,?,?,?)";
@@ -48,7 +49,7 @@ public class ComprasDAO {
             ps.executeUpdate();
         } catch (Exception e) {
         }
-        return 1;
+        return r;
     }
 
     public int guardarDetalleCompra(DetalleCompras dc) {
@@ -64,7 +65,7 @@ public class ComprasDAO {
             con.close();
         } catch (Exception e) {
         }
-        return 1;
+        return r;
     }
 
     

@@ -12,7 +12,9 @@ import com.drommepc.modeloDAO.ComprasDAO;
 import com.drommepc.modeloDAO.ProductoDAO;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ public class Controlador extends HttpServlet {
     Pago pago = new Pago();
     Cliente cl = new Cliente();
     ClienteDAO cldao = new ClienteDAO();
+    Compras co = new Compras();
     ComprasDAO cdao = new ComprasDAO();
     ProductoDAO pdao = new ProductoDAO();
     Producto p = new Producto();
@@ -207,7 +210,27 @@ public class Controlador extends HttpServlet {
                 }
                 break;*/
             case "GenerarCompra":
-                idpago = cdao.IdPago();
+                co = new Compras();
+                idcompra = cdao.IdCompra();
+                co.setIdCliente(cl.getId());
+                co.setIdPago(idpago);
+                co.setFecha("26-11-2023");
+                co.setMonto(totalPagar);
+                co.setEstado("Cancelado - En Proceso de Envio");
+                cdao.guardarCompra(co);
+                
+                    for (int i = 0; i < listaCarrito.size(); i++) {
+                        DetalleCompras dc = new DetalleCompras();
+                        dc.setIdcompra(idcompra);
+                        dc.setIdproducto(listaCarrito.get(i).getIdProducto());
+                        dc.setCantidad(listaCarrito.get(i).getCantidad());
+                        dc.setPrecioCompra(listaCarrito.get(i).getPrecioCompra());
+                        cdao.guardarDetalleCompra(dc);
+                }
+                listaCarrito.clear();
+                break;
+                
+                /*idpago = cdao.IdPago();
                 if (cl.getId() != 0 && listaCarrito.size() != 0 && montopagar > 0) {
                     if (totalPagar > 0.0) {
                         Compras co = new Compras();
@@ -237,7 +260,7 @@ public class Controlador extends HttpServlet {
                 } else {
                     request.getRequestDispatcher("Controlador?accion=carrito").forward(request, response);
                 }
-                break;
+                break;*/
             case "Salir":
                 listaCarrito = new ArrayList();
                 cl = new Cliente();
